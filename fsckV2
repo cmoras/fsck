@@ -1,0 +1,29 @@
+#/bin/env bash
+
+#TO IDENTIFY WHICH PASRTITION HAVE GONE BAD
+--------------------------------------------
+
+for j in $(for i in $(mount | grep eig_backup | awk '{print $1}'); do 
+echo -n  $i ;
+tune2fs -l $i| grep -oP "(?<=Filesystem\sstate\:).*" ;
+done | grep clean$ | awk '{print $1}' ); do 
+part+=" $j";done
+
+
+#TO CHECK IF THE IDENTIFIED PARTITIONS HAVE BEEN PUSHED TO THE ARRAY
+--------------------------------------------------------------------
+for i in ${part[@]}; do echo $i; if [[ $i == "" ]]; then echo "all partitions are good"; break; else  echo "Proceeding with fsck of $i..."; 
+
+
+
+
+
+
+
+
+
+done 
+
+
+
+
