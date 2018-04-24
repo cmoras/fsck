@@ -1,0 +1,2 @@
+# fsck
+fsck auto
