@@ -6,24 +6,20 @@
 for j in $(for i in $(mount | grep eig_backup | awk '{print $1}'); do 
 echo -n  $i ;
 tune2fs -l $i| grep -oP "(?<=Filesystem\sstate\:).*" ;
-done | grep clean$ | awk '{print $1}' ); do 
-part+=" $j";done
+done | grep error | awk '{print $1}' ); do 
+part1+=" $j";done
 
 
 #TO CHECK IF THE IDENTIFIED PARTITIONS HAVE BEEN PUSHED TO THE ARRAY
 --------------------------------------------------------------------
-for i in ${part[@]}; do echo $i; if [[ $i == "" ]]; then echo "all partitions are good"; break; else  echo "Proceeding with fsck of $i..."; 
+for i in ${part[@]}; do echo $i; done
 
 
+for i in ${part1[@]}; do echo $i; if [[ $i == "" ]]; then echo "all partitions are good"; break; else echo "Proceeding....."; fi; home=`blkid | grep $i  |grep -oP "(?<=).*(?=\:\sUUID)"` ;[this one need to be removed... for now we have placed it as for testing]done
 
+#CHECK WITH THE ADMIN[OPTIONAL]
+--------------------------------
+echo "Enter Yes for unmounting and No otherwise"
 
-
-
-
-
-
-done 
-
-
-
+done
 
