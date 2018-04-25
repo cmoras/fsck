@@ -1,0 +1,88 @@
+part=`for i in $(mount  | grep "home" |awk '{print $1}'); do echo -n  $i ;tune2fs -l $i| grep -oP "(?<=Filesystem\sstate\:).*" ;done | grep erro | awk '{print $1}'`
+while true; do 
+if [[ $part = "" ]];then 
+echo "all partitions good";
+break;
+else
+
+home=`blkid | grep $part  |grep -oP "(?<=LABEL\=\").*(?=\"\sUUID)"`
+echo "$part : $home is found with errors"
+echo "Do you want to unmount the partition for fsck?"
+echo "Enter Yes for unmounting and No otherwise"
+read p
+if [[ $p = "yes" || $p = "YES" ]]
+then
+#check=`mount  | grep /home3 | awk '{print $3}'`;
+#while true; do if [[ $check = "$home" ]]; then echo "Still mounted, attempting to kill open files again"; lsof $home |awk '{print $2}' | grep -v PID| xargs kill -9;pkill -9 imap; pkill -9 php*; umount $home; #else  echo "Not mounted" break;fi;done
+
+while true; do if [[ `mount|grep $home|awk '{print $3}'` = "$home" ]]; then echo "Still mounted, attempting to kill open files again"; lsof $home |awk '{print $2}' | grep -v PID| xargs kill -9;pkill -9 imap; pkill -9 php*; umount $home; else  echo "Not mounted"; break;fi;done
+
+echo "Proceeding further."
+clear
+echo "Proceeding further.."
+clear
+echo "Proceeding further..."
+clear
+
+echo "starting fsck for $home";
+
+fsck -fyC0 $part 
+
+mount -a 
+
+else 
+echo "The partition $part needs fsck, please make sure run it soon in order to avoid more problems.";
+fi
+
+
+
+#part=`for i in $(mount  | grep '\/home[0-9]' |awk '{print $1}'); do echo -n  $i ;tune2fs -l $i| grep -oP "(?<=Filesystem\sstate\:).*" ;done | grep erro | awk '{print $1}'`
+while true; do 
+part="/home1"
+if [[ $part = "" ]];then 
+echo "all partitions good";
+break;
+else
+
+home=`blkid | grep $part  |grep -oP "(?<=LABEL\=\").*(?=\"\sUUID)"`
+echo "$part : $home is found with errors"
+echo "Do you want to unmount the partition for fsck?"
+echo "Enter Yes for unmounting and No otherwise"
+read p
+if [[ $p = "yes" || $p = "YES" ]]
+then
+#check=`mount  | grep /home3 | awk '{print $3}'`;
+#while true; do if [[ $check = "$home" ]]; then echo "Still mounted, attempting to kill open files again"; lsof $home |awk '{print $2}' | grep -v PID| xargs kill -9;pkill -9 imap; pkill -9 php*; umount $home; #else  echo "Not mounted" break;fi;done
+
+while true; do if [[ `mount|grep $home|awk '{print $3}'` = "$home" ]]; then echo "Still mounted, attempting to kill open files again"; lsof $home |awk '{print $2}' | grep -v PID| xargs kill -9;pkill -9 imap; pkill -9 php*; umount $home; else  echo "Not mounted"; break;fi;done
+
+echo "Proceeding further."
+clear
+echo "Proceeding further.."
+clear
+echo "Proceeding further..."
+clear
+
+echo "starting fsck for $home";
+
+fsck -fyC0 $part 
+
+mount -a;
+else 
+echo "The partition $part needs fsck, please make sure run it other-wise";
+fi
+
+fi
+done
+
+
+
+
+
+
+
+
+
+
+
+
