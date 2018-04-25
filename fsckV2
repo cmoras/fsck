@@ -12,14 +12,41 @@ part1+=" $j";done
 
 #TO CHECK IF THE IDENTIFIED PARTITIONS HAVE BEEN PUSHED TO THE ARRAY
 --------------------------------------------------------------------
-for i in ${part[@]}; do echo $i; done
+##for i in ${part[@]}; do echo $i; done
 
 
-for i in ${part1[@]}; do echo $i; if [[ $i == "" ]]; then echo "all partitions are good"; break; else echo "Proceeding....."; fi; home=`blkid | grep $i  |grep -oP "(?<=).*(?=\:\sUUID)"` ;[this one need to be removed... for now we have placed it as for testing]done
+for i in ${part1[@]}; do echo $i; if [[ $i == "" ]]; then echo "all partitions are good"; break; else echo "Proceeding.....";home=`blkid | grep $i  |grep -oP "(?<=).*(?=\:\sUUID)"` ;
 
 #CHECK WITH THE ADMIN[OPTIONAL]
 --------------------------------
+echo "Do you want to unmount the partition for fsck?"
 echo "Enter Yes for unmounting and No otherwise"
+read p
+if [[ $p = "yes" || $p = "YES" ]]
+then
+while true; 
+	do 
+		if [[ `mount|grep $home|awk '{print $3}'` = "$home" ]]; then 
+			echo "Still mounted, attempting to kill open files again"; 
+			lsof $home |awk '{print $2}' | grep -v PID| xargs kill -9;
+			pkill -9 imap; 
+			pkill -9 php*; 
+			umount $home; 
+		else  
+			echo "Not mounted"; 
+			break;	
+		fi;
+	done
+echo "Unmounted......";
+
+echo "Starting with fsck.......";
+
+for i in ${part1[@]}; do echo "Starting fsck for  $home";  #fsck -fyC0 $i; done;
+
+mount -a  
+
+fi;
 
 done
+
 
